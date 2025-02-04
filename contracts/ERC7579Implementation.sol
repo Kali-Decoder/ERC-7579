@@ -9,6 +9,7 @@ contract ERC7579Implementation is Initializable, OwnableUpgradeable {
     // Nonce for signature replay protection
     uint256 public nonce;
 
+
     address public implementation;
     // Timestamp of the last successful transaction execution
     uint256 public lastTxTimestamp;
@@ -23,18 +24,14 @@ contract ERC7579Implementation is Initializable, OwnableUpgradeable {
     event TransactionExecuted(address indexed signer, uint256 nonce, uint256 timestamp);
     // Emitted when the smart account is upgraded (if applicable)
     event AccountUpgraded(address newImplementation);
-
-
-
-    function initialize(address _msaImplementation) external initializer onlyOwner {
+    
+    function initialize(address _msaImplementation) external initializer {
         __Ownable_init(msg.sender);
         implementation = _msaImplementation;
         transferOwnership(msg.sender);
         nonce = 0;
         lastTxTimestamp = 0;
     }
-
-
 
     /**
         Modifiers    
@@ -63,8 +60,6 @@ contract ERC7579Implementation is Initializable, OwnableUpgradeable {
         address recovered = hash.toEthSignedMessageHash().recover(signature);
         return (recovered == owner());
     }
-
-
 
      /**
      * @notice Executes a transaction if the signature is valid and the cooldown period has elapsed.
