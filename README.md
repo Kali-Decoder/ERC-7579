@@ -24,6 +24,18 @@ cd <repo-folder>
 pnpm install
 ```
 
+## Progress Update
+
+- Studied ERC7579 mechanics and working principles.
+- Researched architecture from reference docs and ERC7579 website.
+- Discussed EasySample implementation in Telegram group (file was deleted).
+- Found implementation in reference materials (built in Foundry).
+- Cloned and re-implemented contract in Hardhat, added missing files from remappings to modules.
+- Set up project structure and resolved dependencies.
+- Created scripts to deploy the contract.
+- Developed custom contract utilizing MSAAdvanced contract based on task conditions.
+- Wrote deployment and execution scripts for seamless contract deployment.
+
 ## Deployment Steps
 ### 1️⃣ Deploy AdvancedMSA Contract
 Deploy `AdvancedMSA` using `CREATE2` or salt method.
