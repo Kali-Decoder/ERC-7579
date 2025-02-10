@@ -16,7 +16,7 @@ import { ECDSA } from "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import { Initializable } from "./lib/Initializable.sol";
 import { ERC7779Adapter } from "./core/ERC7779Adapter.sol";
 import { SentinelListLib } from "./core/SentineList.sol";
-
+import "./OverrideValidation.sol";
 /**
  * @author zeroknots.eth | rhinestone.wtf
  * Reference implementation of a very simple ERC7579 Account.
@@ -30,13 +30,16 @@ contract MSAAdvanced is
     ModuleManager,
     HookManager,
     RegistryAdapter,
-    ERC7779Adapter
+    ERC7779Adapter,
+    OverrideValidation
 {
     using ExecutionLib for bytes;
     using ModeLib for ModeCode;
     using ECDSA for bytes32;
     using SentinelListLib for SentinelListLib.SentinelList;
 
+
+    constructor() OverrideValidation(3 minutes){}
     /**
      * @inheritdoc IERC7579Account
      * @dev this function is only callable by the entry point or the account itself
@@ -236,12 +239,14 @@ contract MSAAdvanced is
         virtual
         onlyEntryPoint
         payPrefund(missingAccountFunds)
+        validate
         returns (uint256 validSignature)
     {
         address validator;
         // @notice validator encoding in nonce is just an example!
         // @notice this is not part of the standard!
         // Account Vendors may choose any other way to implement validator selection
+        
         uint256 nonce = userOp.nonce;
         assembly {
             validator := shr(96, nonce)
@@ -264,6 +269,7 @@ contract MSAAdvanced is
             // bubble up the return value of the validator module
             validSignature = IValidator(validator).validateUserOp(userOp, userOpHash);
         }
+        
     }
 
     /**
